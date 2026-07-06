@@ -7,7 +7,7 @@ Base: 88b4e93
 ## Tasks
 - Task 1: complete (commits c3b672a..025a614, review clean after fixups)
 - Task 2: complete (commit c37bc0c, review clean; minors: BaseOp unexported, random fallback entropy)
-- Task 3: pending
+- Task 3: complete (commits 63cca57..4dfc408, review clean after adding missing-source + null-guard tests)
 - Task 4: pending
 - Task 5: pending
 - Task 6: pending
