@@ -3,12 +3,14 @@ import ImageEditor from 'tui-image-editor'
 import type { ImageAdapter, ExportOptions, LoadResult } from './adapter.types'
 import type { CropRect } from './operations'
 
+// tui's Filter._createFilter capitalizes only the FIRST letter of `type`, then
+// looks up fabric.Image.filters[Type]. Values here are the fabric class names.
 const FILTER_TYPE: Record<string, string> = {
   brightness: 'Brightness', contrast: 'Contrast', saturation: 'Saturation',
   grayscale: 'Grayscale', sepia: 'Sepia', sepia2: 'Sepia2', invert: 'Invert',
   blur: 'Blur', sharpen: 'Sharpen', emboss: 'Emboss', noise: 'Noise',
-  pixelate: 'Pixelate', removeColor: 'removeColor', tint: 'Tint',
-  multiply: 'Multiply', blend: 'Blend', colorFilter: 'colorFilter',
+  pixelate: 'Pixelate', removeColor: 'RemoveColor', tint: 'Tint',
+  multiply: 'Multiply', blend: 'Blend', colorFilter: 'ColorFilter',
 }
 
 export function createToastAdapter(el: HTMLElement): ImageAdapter {
