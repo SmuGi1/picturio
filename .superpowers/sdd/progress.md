@@ -14,7 +14,7 @@ Base: 88b4e93
 - Task 7: complete (commits 5cb3ebf..f030fa1, review adjudicated: colorFilter casing was a false positive; tui capitalizes first letter only)
 - Task 8: complete (commits 074943b..5d34a18, review clean after markRaw + adapter.destroy teardown fix)
 - Task 9: complete (commits 1d5fb0d..d15a274, review clean; fixed build-integrity regression — see note)
-- Task 10: pending
+- Task 10: complete (commit de6c6b2, review clean; 3 non-blocking minors)
 - Task 11: pending
 - Task 12: pending
 - Task 13: pending
