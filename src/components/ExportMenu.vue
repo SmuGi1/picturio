@@ -21,6 +21,8 @@ function imageBlob(format: 'png' | 'jpeg'): Blob {
 }
 
 async function exportImage(format: 'png' | 'jpeg') {
+  // Guard against exporting the bare original while "view original" is active.
+  await store.ensureEdited()
   const base = baseName(store.originalImage?.source.name ?? 'image')
   const ext = format === 'jpeg' ? 'jpg' : 'png'
   triggerDownload(imageBlob(format), `${base}-edited.${ext}`)
@@ -32,6 +34,7 @@ async function exportJSON() {
 }
 
 async function exportBundle() {
+  await store.ensureEdited()
   const base = baseName(store.originalImage?.source.name ?? 'image')
   // Bundle always uses PNG (lossless) so the archived image matches the op-log
   // exactly regardless of any JPEG the user may also export standalone.

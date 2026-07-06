@@ -41,4 +41,28 @@ describe('serialize/deserialize', () => {
   it('rejects a non-object JSON value (null)', () => {
     expect(() => deserialize('null')).toThrow(/object/i)
   })
+
+  it('rejects a document with a malformed operation (atomic import)', () => {
+    const bad = JSON.stringify({
+      version: OPS_VERSION,
+      source,
+      operations: [{ id: 'a', type: 'crop' }], // missing rect
+    })
+    expect(() => deserialize(bad)).toThrow(/malformed/i)
+  })
+
+  it('rejects an operation with an unknown type', () => {
+    const bad = JSON.stringify({
+      version: OPS_VERSION,
+      source,
+      operations: [{ id: 'a', type: 'teleport' }],
+    })
+    expect(() => deserialize(bad)).toThrow(/malformed/i)
+  })
+
+  it('accepts a document with well-formed operations', () => {
+    const ops = [crop({ left: 0, top: 0, width: 5, height: 5 }), adjust('brightness', 0.2)]
+    const doc = deserialize(serialize(source, ops))
+    expect(doc.operations).toEqual(ops)
+  })
 })

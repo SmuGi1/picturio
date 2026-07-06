@@ -52,6 +52,37 @@ describe('editor store', () => {
     expect(adapter.calls.some((c) => c.method === 'loadImage')).toBe(true)
   })
 
+  it('ensureEdited exits compare mode and rebuilds the edited preview', async () => {
+    const { store, adapter } = setup()
+    await store.loadOriginal('data:img', 'cat.png')
+    store.setAdjust('contrast', 0.5)
+    await store.viewOriginal(true)
+    expect(store.viewingOriginal).toBe(true)
+    adapter.calls.length = 0
+    await store.ensureEdited()
+    expect(store.viewingOriginal).toBe(false)
+    // rebuild reloads the original then replays ops (edited preview restored)
+    expect(adapter.calls.some((c) => c.method === 'loadImage')).toBe(true)
+  })
+
+  it('editing while viewing original first exits compare mode', async () => {
+    const { store } = setup()
+    await store.loadOriginal('data:img', 'cat.png')
+    await store.viewOriginal(true)
+    await store.addOperation((await import('../../src/editor/operations')).filter('sepia'))
+    expect(store.viewingOriginal).toBe(false)
+    expect(store.operations.filter((o) => o.type === 'filter')).toHaveLength(1)
+  })
+
+  it('undo clears the stale viewingOriginal flag', async () => {
+    const { store } = setup()
+    await store.loadOriginal('data:img', 'cat.png')
+    await store.addOperation((await import('../../src/editor/operations')).filter('sepia'))
+    await store.viewOriginal(true)
+    await store.undo()
+    expect(store.viewingOriginal).toBe(false)
+  })
+
   it('undo/redo step through committed operations', async () => {
     const { store } = setup()
     await store.loadOriginal('data:img', 'cat.png')

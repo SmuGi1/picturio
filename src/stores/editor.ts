@@ -74,25 +74,44 @@ export const useEditorStore = defineStore('editor', {
         await replay(this.operations, adapter)
       })
     },
+    async ensureEdited() {
+      // Leave "view original" compare mode and restore the edited preview before
+      // any edit or export, so we never edit on top of — or export — the bare
+      // original while comparing.
+      if (this.viewingOriginal) {
+        this.viewingOriginal = false
+        await this.rebuildPreview()
+      }
+    },
     beginAdjust() {
       this.commit()
     },
     async previewAdjust(name: AdjustName, value: number) {
+      // Update the op synchronously so live state is immediate. Then either
+      // apply just this filter, or — if we were comparing to the original —
+      // exit compare mode and rebuild (which replays this op along with the rest).
       const existing = this.operations.find((o) => o.type === 'adjust' && o.name === name)
       if (existing && existing.type === 'adjust') existing.value = value
       else this.operations.push(makeAdjust(name, value))
-      await enqueue(() => this.requireAdapter().applyFilter(name, { [name]: value }))
+      if (this.viewingOriginal) {
+        this.viewingOriginal = false
+        await this.rebuildPreview()
+      } else {
+        await enqueue(() => this.requireAdapter().applyFilter(name, { [name]: value }))
+      }
     },
     async setAdjust(name: AdjustName, value: number) {
       this.beginAdjust()
       await this.previewAdjust(name, value)
     },
     async addOperation(op: Operation) {
+      await this.ensureEdited()
       this.commit()
       this.operations.push(op)
       await enqueue(() => replay([op], this.requireAdapter()))
     },
     async toggleFilter(name: FilterName, options?: Record<string, unknown>) {
+      await this.ensureEdited()
       const idx = this.operations.findIndex((o) => o.type === 'filter' && o.name === name)
       if (idx >= 0) {
         this.commit()
@@ -120,6 +139,7 @@ export const useEditorStore = defineStore('editor', {
       if (!prev) return
       this.redoStack.push(this.snapshot())
       this.operations = prev
+      this.viewingOriginal = false
       await this.rebuildPreview()
     },
     async redo() {
@@ -127,6 +147,7 @@ export const useEditorStore = defineStore('editor', {
       if (!next) return
       this.undoStack.push(this.snapshot())
       this.operations = next
+      this.viewingOriginal = false
       await this.rebuildPreview()
     },
     exportJSON(): string {
