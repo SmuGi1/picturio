@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { createVuetify } from 'vuetify'
@@ -7,6 +7,10 @@ import { useEditorStore } from '../../src/stores/editor'
 import { MockAdapter } from '../editor/mockAdapter'
 
 describe('ExportMenu', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
   it('import reads a file and calls store.importJSON', async () => {
     setActivePinia(createPinia())
     const store = useEditorStore()
@@ -30,5 +34,17 @@ describe('ExportMenu', () => {
     await (wrapper.vm as any).exportImage('png')
     expect(clickSpy).toHaveBeenCalled()
     clickSpy.mockRestore()
+  })
+
+  it('surfaces an error instead of throwing when import fails', async () => {
+    setActivePinia(createPinia())
+    const store = useEditorStore()
+    store.setAdapter(new MockAdapter())
+    await store.loadOriginal('data:x', 'p.png')
+    vi.spyOn(store, 'importJSON').mockRejectedValue(new Error('bad ops file'))
+    const wrapper = mount(ExportMenu, { global: { plugins: [createVuetify()] } })
+    const file = new File(['not json'], 'p.ops.json', { type: 'application/json' })
+    await expect((wrapper.vm as any).onImport(file)).resolves.toBeUndefined()
+    expect(wrapper.text()).toContain('bad ops file')
   })
 })

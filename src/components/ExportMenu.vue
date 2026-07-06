@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useEditorStore } from '../stores/editor'
 import { dataURLToBlob, triggerDownload, baseName, buildBundle } from '../editor/download'
 
 const store = useEditorStore()
+const error = ref('')
 
 function readText(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -31,6 +33,8 @@ async function exportJSON() {
 
 async function exportBundle() {
   const base = baseName(store.originalImage?.source.name ?? 'image')
+  // Bundle always uses PNG (lossless) so the archived image matches the op-log
+  // exactly regardless of any JPEG the user may also export standalone.
   const zip = await buildBundle(imageBlob('png'), store.exportJSON(), base)
   triggerDownload(zip, `${base}-edited.zip`)
 }
@@ -38,7 +42,11 @@ async function exportBundle() {
 async function onImport(value: File | File[] | null) {
   const file = Array.isArray(value) ? value[0] : value
   if (!file) return
-  await store.importJSON(await readText(file))
+  try {
+    await store.importJSON(await readText(file))
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : 'Failed to import operations file'
+  }
 }
 
 defineExpose({ exportImage, exportJSON, exportBundle, onImport })
@@ -67,5 +75,13 @@ defineExpose({ exportImage, exportJSON, exportBundle, onImport })
         <v-list-item title="Download bundle (.zip)" @click="exportBundle" />
       </v-list>
     </v-menu>
+    <v-snackbar
+      :model-value="error !== ''"
+      :timeout="5000"
+      color="error"
+      @update:model-value="(v: boolean) => { if (!v) error = '' }"
+    >
+      {{ error }}
+    </v-snackbar>
   </div>
 </template>
