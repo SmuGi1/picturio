@@ -10,7 +10,7 @@ Base: 88b4e93
 - Task 3: complete (commits 63cca57..4dfc408, review clean after adding missing-source + null-guard tests)
 - Task 4: complete (commit 646e93f, review clean)
 - Task 5: complete (commit c274655, review clean)
-- Task 6: pending
+- Task 6: complete (commits 66af750..7d481bc, review clean after race+undo-flood fix and snapshot DRY)
 - Task 7: pending
 - Task 8: pending
 - Task 9: pending
@@ -25,3 +25,4 @@ Base: 88b4e93
 ## Minor findings (for final review triage)
 - Task 4 (Minor): MockAdapter.applyFilter records undefined for omitted options arg (tests/editor/mockAdapter.ts); consider conditional spread if a downstream test asserts exact args.
 - Task 5 (Minor): replay switch has no never-exhaustiveness guard (src/editor/replay.ts); add assertNever if union grows (mind noUnusedLocals).
+- Task 6 (Minor, deferred): module-scoped opQueue shared across store instances (fine for single-editor design; document if multi-editor ever added). setAdjust still commits per call by design; sliders must use beginAdjust/previewAdjust split.
