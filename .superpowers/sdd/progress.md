@@ -8,7 +8,7 @@ Base: 88b4e93
 - Task 1: complete (commits c3b672a..025a614, review clean after fixups)
 - Task 2: complete (commit c37bc0c, review clean; minors: BaseOp unexported, random fallback entropy)
 - Task 3: complete (commits 63cca57..4dfc408, review clean after adding missing-source + null-guard tests)
-- Task 4: pending
+- Task 4: complete (commit 646e93f, review clean)
 - Task 5: pending
 - Task 6: pending
 - Task 7: pending
@@ -23,3 +23,4 @@ Base: 88b4e93
 - Task 16: pending
 
 ## Minor findings (for final review triage)
+- Task 4 (Minor): MockAdapter.applyFilter records undefined for omitted options arg (tests/editor/mockAdapter.ts); consider conditional spread if a downstream test asserts exact args.
