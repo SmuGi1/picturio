@@ -12,7 +12,7 @@ Base: 88b4e93
 - Task 5: complete (commit c274655, review clean)
 - Task 6: complete (commits 66af750..7d481bc, review clean after race+undo-flood fix and snapshot DRY)
 - Task 7: complete (commits 5cb3ebf..f030fa1, review adjudicated: colorFilter casing was a false positive; tui capitalizes first letter only)
-- Task 8: pending
+- Task 8: complete (commits 074943b..5d34a18, review clean after markRaw + adapter.destroy teardown fix)
 - Task 9: pending
 - Task 10: pending
 - Task 11: pending
@@ -26,3 +26,4 @@ Base: 88b4e93
 - Task 4 (Minor): MockAdapter.applyFilter records undefined for omitted options arg (tests/editor/mockAdapter.ts); consider conditional spread if a downstream test asserts exact args.
 - Task 5 (Minor): replay switch has no never-exhaustiveness guard (src/editor/replay.ts); add assertNever if union grows (mind noUnusedLocals).
 - Task 6 (Minor, deferred): module-scoped opQueue shared across store instances (fine for single-editor design; document if multi-editor ever added). setAdjust still commits per call by design; sliders must use beginAdjust/previewAdjust split.
+- Task 8 (Minor, deferred): EditorCanvas silently no-ops if host ref is null at mount (cannot happen on sync mount).
