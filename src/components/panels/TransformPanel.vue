@@ -13,8 +13,13 @@ function startCrop() {
 
 async function applyCrop() {
   const rect = store.requireAdapter().getCropRect()
-  await store.addOperation(makeCrop(rect))
-  cropping.value = false
+  try {
+    await store.addOperation(makeCrop(rect))
+  } finally {
+    // Always leave crop mode, even if applying the op fails, so the panel
+    // never gets stuck with only Apply/Cancel showing.
+    cropping.value = false
+  }
 }
 
 function cancelCrop() {
