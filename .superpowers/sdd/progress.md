@@ -31,3 +31,4 @@ Base: 88b4e93
 - Task 9 (Minor, deferred): onFile/doReset have no try/catch around FileReader/store calls; consider a snackbar on error.
 - Build (Minor, deferred): single JS chunk >500kB (tui-image-editor+fabric+vuetify); consider manualChunks if load time matters.
 - E2E findings fixed: FilterPanel v-chip model-value hid all chips; empty-cropzone crash. Both fixed + regression-tested. jsdom cannot test Vuetify rendering — real-browser E2E is the gate for render bugs.
+- FINAL REVIEW (opus): READY after 2 Important fixes — export/edit-while-comparing guard (ensureEdited) and atomic per-op import validation. Both fixed, 58 tests + build + 4 headless-Chrome E2E suites green. Remaining Minors triaged as leave-as-is (draw-mode-after-rebuild, incremental-apply rollback) + documented.
