@@ -13,7 +13,7 @@ Base: 88b4e93
 - Task 6: complete (commits 66af750..7d481bc, review clean after race+undo-flood fix and snapshot DRY)
 - Task 7: complete (commits 5cb3ebf..f030fa1, review adjudicated: colorFilter casing was a false positive; tui capitalizes first letter only)
 - Task 8: complete (commits 074943b..5d34a18, review clean after markRaw + adapter.destroy teardown fix)
-- Task 9: pending
+- Task 9: complete (commits 1d5fb0d..d15a274, review clean; fixed build-integrity regression — see note)
 - Task 10: pending
 - Task 11: pending
 - Task 12: pending
@@ -27,3 +27,6 @@ Base: 88b4e93
 - Task 5 (Minor): replay switch has no never-exhaustiveness guard (src/editor/replay.ts); add assertNever if union grows (mind noUnusedLocals).
 - Task 6 (Minor, deferred): module-scoped opQueue shared across store instances (fine for single-editor design; document if multi-editor ever added). setAdjust still commits per call by design; sliders must use beginAdjust/previewAdjust split.
 - Task 8 (Minor, deferred): EditorCanvas silently no-ops if host ref is null at mount (cannot happen on sync mount).
+- BUILD GATE (important): plain `vue-tsc --noEmit` does NOT check the app project (project references). Real type gate is `npm run build` (vue-tsc -b). All remaining tasks must verify with `npm run build`.
+- Task 9 (Minor, deferred): onFile/doReset have no try/catch around FileReader/store calls; consider a snackbar on error.
+- Build (Minor, deferred): single JS chunk >500kB (tui-image-editor+fabric+vuetify); consider manualChunks if load time matters.
