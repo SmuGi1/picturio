@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import EditorCanvas from './components/EditorCanvas.vue'
+import Toolbar from './components/Toolbar.vue'
 </script>
 
 <template>
   <v-app>
+    <Toolbar />
     <v-main>
       <v-container>
-        <h1 class="text-h5">Picturio</h1>
         <EditorCanvas />
       </v-container>
     </v-main>
