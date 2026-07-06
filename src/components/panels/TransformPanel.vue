@@ -12,9 +12,16 @@ function startCrop() {
 }
 
 async function applyCrop() {
-  const rect = store.requireAdapter().getCropRect()
+  const adapter = store.requireAdapter()
+  const rect = adapter.getCropRect()
   try {
-    await store.addOperation(makeCrop(rect))
+    // If the user clicked Apply without drawing a cropzone, the rect has no
+    // area; cropping to it would produce an invalid empty image. Just exit.
+    if (rect.width >= 1 && rect.height >= 1) {
+      await store.addOperation(makeCrop(rect))
+    } else {
+      adapter.cancelCrop()
+    }
   } finally {
     // Always leave crop mode, even if applying the op fails, so the panel
     // never gets stuck with only Apply/Cancel showing.

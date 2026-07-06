@@ -22,6 +22,13 @@ describe('TransformPanel', () => {
     expect(store.operations.some((o) => o.type === 'crop')).toBe(true)
   })
 
+  it('does not apply a degenerate (empty) crop', async () => {
+    const { store, wrapper } = await setup()
+    vi.spyOn(store.requireAdapter(), 'getCropRect').mockReturnValue({ left: 0, top: 0, width: 0, height: 0 })
+    await (wrapper.vm as any).applyCrop()
+    expect(store.operations.some((o) => o.type === 'crop')).toBe(false)
+  })
+
   it('rotate pushes a rotate op', async () => {
     const { store, wrapper } = await setup()
     const spy = vi.spyOn(store, 'addOperation')
