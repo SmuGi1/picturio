@@ -72,4 +72,34 @@ describe('editor store', () => {
     await store.importJSON(json)
     expect(store.operations.filter((o) => o.type === 'adjust')).toHaveLength(1)
   })
+
+  it('previewAdjust updates live without committing history', async () => {
+    const { store } = setup()
+    await store.loadOriginal('data:img', 'cat.png')
+    await store.previewAdjust('brightness', 0.3)
+    expect(store.canUndo).toBe(false)
+    const adjusts = store.operations.filter((o) => o.type === 'adjust')
+    expect(adjusts).toHaveLength(1)
+  })
+
+  it('beginAdjust + multiple previewAdjust makes one undo entry for the gesture', async () => {
+    const { store } = setup()
+    await store.loadOriginal('data:img', 'cat.png')
+    store.beginAdjust()
+    await store.previewAdjust('brightness', 0.1)
+    await store.previewAdjust('brightness', 0.8)
+    expect(store.canUndo).toBe(true)
+    expect(store.operations.filter((o) => o.type === 'adjust')).toHaveLength(1)
+    await store.undo()
+    expect(store.operations.filter((o) => o.type === 'adjust')).toHaveLength(0)
+  })
+
+  it('serializes adapter calls: reset after previewAdjust ends on a rebuilt preview', async () => {
+    const { store, adapter } = setup()
+    await store.loadOriginal('data:img', 'cat.png')
+    await store.setAdjust('brightness', 0.5)
+    await store.reset()
+    const last = adapter.calls[adapter.calls.length - 1]
+    expect(last.method).toBe('loadImage')
+  })
 })

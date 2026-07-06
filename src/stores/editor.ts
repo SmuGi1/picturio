@@ -16,6 +16,16 @@ interface State {
   redoStack: Operation[][]
 }
 
+let opQueue: Promise<unknown> = Promise.resolve()
+function enqueue<T>(task: () => Promise<T>): Promise<T> {
+  const run = opQueue.then(task, task)
+  opQueue = run.then(
+    () => undefined,
+    () => undefined,
+  )
+  return run
+}
+
 export const useEditorStore = defineStore('editor', {
   state: (): State => ({
     adapter: null,
@@ -39,7 +49,7 @@ export const useEditorStore = defineStore('editor', {
       return this.adapter
     },
     async loadOriginal(dataURL: string, name: string) {
-      const { width, height } = await this.requireAdapter().loadImage(dataURL, name)
+      const { width, height } = await enqueue(() => this.requireAdapter().loadImage(dataURL, name))
       this.originalImage = { dataURL, source: { name, width, height } }
       this.operations = []
       this.undoStack = []
@@ -47,34 +57,42 @@ export const useEditorStore = defineStore('editor', {
       this.viewingOriginal = false
     },
     commit() {
-      this.undoStack.push(this.operations.map((o) => ({ ...o })))
+      this.undoStack.push(JSON.parse(JSON.stringify(this.operations)) as Operation[])
       this.redoStack = []
     },
     async rebuildPreview() {
-      const adapter = this.requireAdapter()
       const orig = this.originalImage
       if (!orig) return
-      await adapter.loadImage(orig.dataURL, orig.source.name)
-      await replay(this.operations, adapter)
+      await enqueue(async () => {
+        const adapter = this.requireAdapter()
+        await adapter.loadImage(orig.dataURL, orig.source.name)
+        await replay(this.operations, adapter)
+      })
     },
-    setAdjust(name: AdjustName, value: number) {
+    beginAdjust() {
       this.commit()
+    },
+    async previewAdjust(name: AdjustName, value: number) {
       const existing = this.operations.find((o) => o.type === 'adjust' && o.name === name)
       if (existing && existing.type === 'adjust') existing.value = value
       else this.operations.push(makeAdjust(name, value))
-      void this.requireAdapter().applyFilter(name, { [name]: value })
+      await enqueue(() => this.requireAdapter().applyFilter(name, { [name]: value }))
+    },
+    async setAdjust(name: AdjustName, value: number) {
+      this.beginAdjust()
+      await this.previewAdjust(name, value)
     },
     async addOperation(op: Operation) {
       this.commit()
       this.operations.push(op)
-      await replay([op], this.requireAdapter())
+      await enqueue(() => replay([op], this.requireAdapter()))
     },
     async toggleFilter(name: FilterName, options?: Record<string, unknown>) {
       const idx = this.operations.findIndex((o) => o.type === 'filter' && o.name === name)
       if (idx >= 0) {
         this.commit()
         this.operations.splice(idx, 1)
-        await this.requireAdapter().removeFilter(name)
+        await enqueue(() => this.requireAdapter().removeFilter(name))
       } else {
         const { filter } = await import('../editor/operations')
         await this.addOperation(filter(name, options))
@@ -88,10 +106,9 @@ export const useEditorStore = defineStore('editor', {
     },
     async viewOriginal(on: boolean) {
       this.viewingOriginal = on
-      const adapter = this.requireAdapter()
       const orig = this.originalImage
       if (!orig) return
-      if (on) await adapter.loadImage(orig.dataURL, orig.source.name)
+      if (on) await enqueue(() => this.requireAdapter().loadImage(orig.dataURL, orig.source.name))
       else await this.rebuildPreview()
     },
     async undo() {
