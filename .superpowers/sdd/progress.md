@@ -11,7 +11,7 @@ Base: 88b4e93
 - Task 4: complete (commit 646e93f, review clean)
 - Task 5: complete (commit c274655, review clean)
 - Task 6: complete (commits 66af750..7d481bc, review clean after race+undo-flood fix and snapshot DRY)
-- Task 7: pending
+- Task 7: complete (commits 5cb3ebf..f030fa1, review adjudicated: colorFilter casing was a false positive; tui capitalizes first letter only)
 - Task 8: pending
 - Task 9: pending
 - Task 10: pending
