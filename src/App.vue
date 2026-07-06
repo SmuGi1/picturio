@@ -5,12 +5,14 @@ import TransformPanel from './components/panels/TransformPanel.vue'
 import AdjustPanel from './components/panels/AdjustPanel.vue'
 import FilterPanel from './components/panels/FilterPanel.vue'
 import AnnotatePanel from './components/panels/AnnotatePanel.vue'
+import ExportMenu from './components/ExportMenu.vue'
 </script>
 
 <template>
   <v-app>
     <v-app-bar color="surface" flat>
       <v-app-bar-title>Picturio</v-app-bar-title>
+      <ExportMenu />
     </v-app-bar>
     <v-main>
       <Toolbar />
