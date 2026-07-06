@@ -16,4 +16,16 @@ describe('EditorCanvas', () => {
     })
     expect(useEditorStore().adapter).toBe(adapter)
   })
+
+  it('destroys the adapter and clears the store on unmount', () => {
+    setActivePinia(createPinia())
+    const adapter = new MockAdapter()
+    const wrapper = mount(EditorCanvas, {
+      global: { plugins: [createVuetify()] },
+      props: { adapterFactory: () => adapter },
+    })
+    wrapper.unmount()
+    expect(adapter.calls.some((c) => c.method === 'destroy')).toBe(true)
+    expect(useEditorStore().adapter).toBeNull()
+  })
 })

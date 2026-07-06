@@ -41,7 +41,7 @@ export const useEditorStore = defineStore('editor', {
     hasImage: (s) => s.originalImage !== null,
   },
   actions: {
-    setAdapter(adapter: ImageAdapter) {
+    setAdapter(adapter: ImageAdapter | null) {
       this.adapter = adapter
     },
     requireAdapter(): ImageAdapter {

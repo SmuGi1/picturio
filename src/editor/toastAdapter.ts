@@ -51,5 +51,6 @@ export function createToastAdapter(el: HTMLElement): ImageAdapter {
     toDataURL(opts?: ExportOptions): string {
       return editor.toDataURL({ format: opts?.format ?? 'png', quality: opts?.quality ?? 1 })
     },
+    destroy(): void { editor.destroy() },
   }
 }

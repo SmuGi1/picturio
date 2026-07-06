@@ -24,4 +24,5 @@ export class MockAdapter implements ImageAdapter {
   async applyMask(props: Record<string, unknown>) { this.record('applyMask', props) }
   async clearObjectsAndFilters() { this.record('clearObjectsAndFilters') }
   toDataURL(opts?: ExportOptions): string { this.record('toDataURL', opts); return 'data:image/png;base64,MOCK' }
+  destroy(): void { this.record('destroy') }
 }

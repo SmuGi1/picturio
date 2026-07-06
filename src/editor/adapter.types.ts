@@ -24,4 +24,5 @@ export interface ImageAdapter {
   applyMask(props: Record<string, unknown>): Promise<void>
   clearObjectsAndFilters(): Promise<void>
   toDataURL(opts?: ExportOptions): string
+  destroy(): void
 }
