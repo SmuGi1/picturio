@@ -32,4 +32,13 @@ describe('serialize/deserialize', () => {
     const bad = JSON.stringify({ version: OPS_VERSION, source })
     expect(() => deserialize(bad)).toThrow(/operations/i)
   })
+
+  it('rejects a document missing source', () => {
+    const bad = JSON.stringify({ version: OPS_VERSION, operations: [] })
+    expect(() => deserialize(bad)).toThrow(/source/i)
+  })
+
+  it('rejects a non-object JSON value (null)', () => {
+    expect(() => deserialize('null')).toThrow(/object/i)
+  })
 })

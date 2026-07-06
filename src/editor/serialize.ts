@@ -26,6 +26,9 @@ export function deserialize(json: string): OpsDocument {
   } catch {
     throw new Error('Invalid JSON: could not parse operations document')
   }
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new Error('Invalid document: expected a JSON object')
+  }
   const doc = parsed as Partial<OpsDocument>
   if (doc.version !== OPS_VERSION) {
     throw new Error(`Unsupported operations version: ${String(doc.version)} (expected ${OPS_VERSION})`)
