@@ -20,7 +20,7 @@ Base: 88b4e93
 - Task 13: complete (commits 76a96d4..183a773, review clean; polished color picker/icons/toggle/tests)
 - Task 14: complete (commits 5026a38..fbd7a78, review clean; added Annotate assertion)
 - Task 15: complete (commits adf2518..4cecc1e, review clean; added import error handling + test cleanup)
-- Task 16: pending
+- Task 16: complete (commit 3137f8b; 52 unit tests + full real-browser E2E green, README written)
 
 ## Minor findings (for final review triage)
 - Task 4 (Minor): MockAdapter.applyFilter records undefined for omitted options arg (tests/editor/mockAdapter.ts); consider conditional spread if a downstream test asserts exact args.
@@ -30,3 +30,4 @@ Base: 88b4e93
 - BUILD GATE (important): plain `vue-tsc --noEmit` does NOT check the app project (project references). Real type gate is `npm run build` (vue-tsc -b). All remaining tasks must verify with `npm run build`.
 - Task 9 (Minor, deferred): onFile/doReset have no try/catch around FileReader/store calls; consider a snackbar on error.
 - Build (Minor, deferred): single JS chunk >500kB (tui-image-editor+fabric+vuetify); consider manualChunks if load time matters.
+- E2E findings fixed: FilterPanel v-chip model-value hid all chips; empty-cropzone crash. Both fixed + regression-tested. jsdom cannot test Vuetify rendering — real-browser E2E is the gate for render bugs.
