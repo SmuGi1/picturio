@@ -27,7 +27,12 @@ export function createToastAdapter(el: HTMLElement): ImageAdapter {
       const { newWidth, newHeight } = await editor.loadImageFromURL(dataURL, name)
       return { width: newWidth, height: newHeight }
     },
-    async applyFilter(name, options) { await editor.applyFilter(tuiType(name), options ?? {}) },
+    // Our op-model options are dynamically shaped (Record<string, unknown>);
+    // tui types each option set as a specific member of IFilterOptions, so we
+    // cast through the library's own parameter type at these seams.
+    async applyFilter(name, options) {
+      await editor.applyFilter(tuiType(name), options as Parameters<typeof editor.applyFilter>[1])
+    },
     async removeFilter(name) { await editor.removeFilter(tuiType(name)) },
     async crop(rect: CropRect) {
       await editor.crop(rect)
@@ -39,13 +44,23 @@ export function createToastAdapter(el: HTMLElement): ImageAdapter {
     async flip(axis) { axis === 'x' ? await editor.flipX() : await editor.flipY() },
     async rotate(degrees) { await editor.rotate(degrees) },
     async addObject(type, props) {
-      if (type === 'text') { const { id } = await editor.addText(String(props.text ?? 'Text'), props); return String(id) }
-      if (type === 'icon') { const { id } = await editor.addIcon(String(props.icon ?? 'icon-star'), props); return String(id) }
-      if (type === 'shape') { const { id } = await editor.addShape(String(props.shape ?? 'rect'), props); return String(id) }
-      editor.startDrawingMode('FREE_DRAWING', props); return 'free-drawing'
+      if (type === 'text') {
+        const { id } = await editor.addText(String(props.text ?? 'Text'), props as Parameters<typeof editor.addText>[1])
+        return String(id)
+      }
+      if (type === 'icon') {
+        const { id } = await editor.addIcon(String(props.icon ?? 'icon-star'), props as Parameters<typeof editor.addIcon>[1])
+        return String(id)
+      }
+      if (type === 'shape') {
+        const { id } = await editor.addShape(String(props.shape ?? 'rect'), props as Parameters<typeof editor.addShape>[1])
+        return String(id)
+      }
+      editor.startDrawingMode('FREE_DRAWING', props as Parameters<typeof editor.startDrawingMode>[1])
+      return 'free-drawing'
     },
     async applyMask(props) {
-      await editor.addShape('rect', { ...props, fill: 'rgba(0,0,0,0.5)' })
+      await editor.addShape('rect', { ...props, fill: 'rgba(0,0,0,0.5)' } as Parameters<typeof editor.addShape>[1])
     },
     async clearObjectsAndFilters() { await editor.clearObjects() },
     toDataURL(opts?: ExportOptions): string {

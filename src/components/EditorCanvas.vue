@@ -2,6 +2,7 @@
 import { onMounted, onBeforeUnmount, ref, markRaw } from 'vue'
 import { useEditorStore } from '../stores/editor'
 import { createToastAdapter } from '../editor/toastAdapter'
+import type { ImageAdapter } from '../editor/adapter.types'
 
 const props = defineProps<{ adapterFactory?: (el: HTMLElement) => ImageAdapter }>()
 const host = ref<HTMLDivElement | null>(null)

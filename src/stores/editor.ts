@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { AdjustName, FilterName, Operation } from '../editor/operations'
-import { adjust as makeAdjust } from '../editor/operations'
+import { adjust as makeAdjust, filter as makeFilter } from '../editor/operations'
 import type { ImageAdapter } from '../editor/adapter.types'
 import { replay } from '../editor/replay'
 import { serialize, deserialize, type OpsSource } from '../editor/serialize'
@@ -99,8 +99,7 @@ export const useEditorStore = defineStore('editor', {
         this.operations.splice(idx, 1)
         await enqueue(() => this.requireAdapter().removeFilter(name))
       } else {
-        const { filter } = await import('../editor/operations')
-        await this.addOperation(filter(name, options))
+        await this.addOperation(makeFilter(name, options))
       }
     },
     async reset() {
