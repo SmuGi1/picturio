@@ -11,5 +11,6 @@ describe('App', () => {
     expect(wrapper.text()).toContain('Adjust')
     expect(wrapper.text()).toContain('Filters')
     expect(wrapper.text()).toContain('Transform')
+    expect(wrapper.text()).toContain('Annotate')
   })
 })
