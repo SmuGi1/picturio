@@ -56,8 +56,13 @@ export const useEditorStore = defineStore('editor', {
       this.redoStack = []
       this.viewingOriginal = false
     },
+    snapshot(): Operation[] {
+      // Ops are JSON-serializable by contract, so this is a safe deep clone
+      // that keeps undo/redo snapshots independent from live nested state.
+      return JSON.parse(JSON.stringify(this.operations)) as Operation[]
+    },
     commit() {
-      this.undoStack.push(JSON.parse(JSON.stringify(this.operations)) as Operation[])
+      this.undoStack.push(this.snapshot())
       this.redoStack = []
     },
     async rebuildPreview() {
@@ -114,14 +119,14 @@ export const useEditorStore = defineStore('editor', {
     async undo() {
       const prev = this.undoStack.pop()
       if (!prev) return
-      this.redoStack.push(this.operations.map((o) => ({ ...o })))
+      this.redoStack.push(this.snapshot())
       this.operations = prev
       await this.rebuildPreview()
     },
     async redo() {
       const next = this.redoStack.pop()
       if (!next) return
-      this.undoStack.push(this.operations.map((o) => ({ ...o })))
+      this.undoStack.push(this.snapshot())
       this.operations = next
       await this.rebuildPreview()
     },
