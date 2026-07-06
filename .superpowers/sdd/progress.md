@@ -9,7 +9,7 @@ Base: 88b4e93
 - Task 2: complete (commit c37bc0c, review clean; minors: BaseOp unexported, random fallback entropy)
 - Task 3: complete (commits 63cca57..4dfc408, review clean after adding missing-source + null-guard tests)
 - Task 4: complete (commit 646e93f, review clean)
-- Task 5: pending
+- Task 5: complete (commit c274655, review clean)
 - Task 6: pending
 - Task 7: pending
 - Task 8: pending
@@ -24,3 +24,4 @@ Base: 88b4e93
 
 ## Minor findings (for final review triage)
 - Task 4 (Minor): MockAdapter.applyFilter records undefined for omitted options arg (tests/editor/mockAdapter.ts); consider conditional spread if a downstream test asserts exact args.
+- Task 5 (Minor): replay switch has no never-exhaustiveness guard (src/editor/replay.ts); add assertNever if union grows (mind noUnusedLocals).
