@@ -26,4 +26,22 @@ describe('AnnotatePanel', () => {
     await (wrapper.vm as any).addShape('rect')
     expect(store.operations.some((o) => o.type === 'shape')).toBe(true)
   })
+  it('add icon pushes an icon annotation op', async () => {
+    const { store, wrapper } = await setup()
+    await (wrapper.vm as any).addIcon('icon-star')
+    expect(store.operations.some((o) => o.type === 'icon')).toBe(true)
+  })
+  it('add mask pushes a mask annotation op', async () => {
+    const { store, wrapper } = await setup()
+    await (wrapper.vm as any).addMask()
+    expect(store.operations.some((o) => o.type === 'mask')).toBe(true)
+  })
+  it('toggleDraw records one draw op on enter and stops drawing on exit', async () => {
+    const { store, wrapper } = await setup()
+    await (wrapper.vm as any).toggleDraw()
+    expect(store.operations.filter((o) => o.type === 'draw')).toHaveLength(1)
+    // exit: stops drawing mode via the adapter, adds no further op
+    await (wrapper.vm as any).toggleDraw()
+    expect(store.operations.filter((o) => o.type === 'draw')).toHaveLength(1)
+  })
 })
