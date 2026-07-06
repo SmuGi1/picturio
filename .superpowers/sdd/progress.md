@@ -17,7 +17,7 @@ Base: 88b4e93
 - Task 10: complete (commit de6c6b2, review clean; 3 non-blocking minors)
 - Task 11: complete (commits b6b5a75..c398333, review clean after applyCrop try/finally fix)
 - Task 12: complete (commits 7c373c6..143bb2a, review clean after catalog-completeness test tightened)
-- Task 13: pending
+- Task 13: complete (commits 76a96d4..183a773, review clean; polished color picker/icons/toggle/tests)
 - Task 14: pending
 - Task 15: pending
 - Task 16: pending
