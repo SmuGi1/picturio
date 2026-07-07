@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useEditorStore } from '../stores/editor'
 import EditorCanvas from './EditorCanvas.vue'
 
 const store = useEditorStore()
 const zoom = ref(100)
+
+watch(() => store.originalImage, () => { zoom.value = 100 })
 
 function zoomIn() { zoom.value = Math.min(400, zoom.value + 25) }
 function zoomOut() { zoom.value = Math.max(25, zoom.value - 25) }
@@ -38,10 +40,10 @@ defineExpose({ zoomIn, zoomOut, zoomFit, zoom })
         </span>
       </div>
       <div class="editor-stage__zoom">
-        <button class="zoom-btn" type="button" title="Zoom out" @click="zoomOut">–</button>
+        <button class="zoom-btn" type="button" title="Zoom out" aria-label="Zoom out" @click="zoomOut">–</button>
         <span class="zoom-label">{{ zoom }}%</span>
-        <button class="zoom-btn" type="button" title="Zoom in" @click="zoomIn">+</button>
-        <button class="zoom-fit" type="button" @click="zoomFit">Fit</button>
+        <button class="zoom-btn" type="button" title="Zoom in" aria-label="Zoom in" @click="zoomIn">+</button>
+        <button class="zoom-fit" type="button" aria-label="Fit to screen" @click="zoomFit">Fit</button>
       </div>
     </div>
   </div>

@@ -51,9 +51,9 @@ function reset() {
         step="1"
         :value="percent"
         :disabled="disabled"
+        :aria-label="label"
         @input="onInput"
-        @mousedown="onStart"
-        @touchstart="onStart"
+        @pointerdown="onStart"
       />
     </div>
   </div>

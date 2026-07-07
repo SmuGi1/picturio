@@ -80,7 +80,7 @@ defineExpose({ exportImage, exportJSON, exportBundle, onImport })
         <v-list-item title="Import operations JSON…" @click="openImport" />
       </v-list>
     </v-menu>
-    <input ref="fileInput" type="file" accept="application/json,.json" class="export-import-input" @change="onImportChange" />
+    <input ref="fileInput" type="file" accept="application/json,.json" class="export-import-input" aria-label="Import operations JSON file" @change="onImportChange" />
     <v-snackbar
       :model-value="error !== ''"
       :timeout="5000"

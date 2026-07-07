@@ -12,9 +12,14 @@ async function addShape(shape: 'rect' | 'triangle') {
 }
 async function toggleDraw() {
   if (!drawing.value) {
+    // Flip only after the op is applied, so a failed apply doesn't leave the
+    // toggle stuck "on" with no draw mode actually active.
     await store.addOperation(annotation('draw', { color: color.value, width: 6 }))
     drawing.value = true
   } else {
+    // cancelCrop is used here to stop drawing mode — ImageAdapter has no dedicated
+    // stopDrawing(); cancelCrop() calls the editor's stopDrawingMode() which exits
+    // all drawing modes.
     store.requireAdapter().cancelCrop()
     drawing.value = false
   }
@@ -34,7 +39,7 @@ defineExpose({ addShape, toggleDraw, addMask })
   <div class="annotate-panel">
     <div class="annotate-color">
       <label class="annotate-swatch">
-        <input type="color" :value="color" class="annotate-swatch__input" @input="onColorInput" />
+        <input type="color" :value="color" class="annotate-swatch__input" aria-label="Annotation color" @input="onColorInput" />
         <span class="annotate-swatch__fill" :style="{ background: color }" />
       </label>
       <span class="annotate-color__label">Annotation color</span>

@@ -15,12 +15,16 @@ async function applyCrop() {
   const adapter = store.requireAdapter()
   const rect = adapter.getCropRect()
   try {
+    // If the user clicked Apply without drawing a cropzone, the rect has no
+    // area; cropping to it would produce an invalid empty image. Just exit.
     if (rect.width >= 1 && rect.height >= 1) {
       await store.addOperation(makeCrop(rect))
     } else {
       adapter.cancelCrop()
     }
   } finally {
+    // Always leave crop mode, even if applying the op fails, so the panel
+    // never gets stuck with only Apply/Cancel showing.
     cropping.value = false
   }
 }
@@ -52,16 +56,16 @@ defineExpose({ startCrop, applyCrop, cancelCrop, flip, rotate })
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14" /><path d="M18 22V8a2 2 0 0 0-2-2H2" /></svg>
         Crop
       </button>
-      <button class="tool-btn tool-btn--icon" type="button" title="Flip horizontal" :disabled="!store.hasImage" @click="flip('x')">
+      <button class="tool-btn tool-btn--icon" type="button" title="Flip horizontal" aria-label="Flip horizontal" :disabled="!store.hasImage" @click="flip('x')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18" /><path d="M16 7l4 5-4 5" /><path d="M8 7l-4 5 4 5" /></svg>
       </button>
-      <button class="tool-btn tool-btn--icon" type="button" title="Flip vertical" :disabled="!store.hasImage" @click="flip('y')">
+      <button class="tool-btn tool-btn--icon" type="button" title="Flip vertical" aria-label="Flip vertical" :disabled="!store.hasImage" @click="flip('y')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18" /><path d="M7 16l5 4 5-4" /><path d="M7 8l5-4 5 4" /></svg>
       </button>
-      <button class="tool-btn tool-btn--icon" type="button" title="Rotate left" :disabled="!store.hasImage" @click="rotate(-90)">
+      <button class="tool-btn tool-btn--icon" type="button" title="Rotate left" aria-label="Rotate left" :disabled="!store.hasImage" @click="rotate(-90)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 1 2.6 6.3" /><path d="M3 21v-6h6" /></svg>
       </button>
-      <button class="tool-btn tool-btn--icon" type="button" title="Rotate right" :disabled="!store.hasImage" @click="rotate(90)">
+      <button class="tool-btn tool-btn--icon" type="button" title="Rotate right" aria-label="Rotate right" :disabled="!store.hasImage" @click="rotate(90)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 0-2.6 6.3" /><path d="M21 21v-6h-6" /></svg>
       </button>
     </div>

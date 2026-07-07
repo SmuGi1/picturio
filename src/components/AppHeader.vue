@@ -47,7 +47,7 @@ defineExpose({ onFile, onViewOriginal })
         <div class="app-header__name">Picturio</div>
       </div>
       <div class="app-header__divider" />
-      <button class="file-chip" type="button" @click="pickFile">
+      <button class="file-chip" type="button" aria-label="Change image" @click="pickFile">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pt-text-dim)" stroke-width="2" stroke-linecap="round"><path d="M12 16V4M12 4L7 9M12 4l5 5" /><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" /></svg>
         <span class="file-chip__name">{{ fileName }}</span>
       </button>
@@ -56,10 +56,10 @@ defineExpose({ onFile, onViewOriginal })
 
     <div class="app-header__right">
       <template v-if="store.hasImage">
-        <button class="icon-btn" type="button" title="Undo" :disabled="!store.canUndo" @click="store.undo()">
+        <button class="icon-btn" type="button" title="Undo" aria-label="Undo" :disabled="!store.canUndo" @click="store.undo()">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5" /><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" /></svg>
         </button>
-        <button class="icon-btn" type="button" title="Redo" :disabled="!store.canRedo" @click="store.redo()">
+        <button class="icon-btn" type="button" title="Redo" aria-label="Redo" :disabled="!store.canRedo" @click="store.redo()">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5" /><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13" /></svg>
         </button>
         <div class="app-header__divider" />
@@ -67,6 +67,7 @@ defineExpose({ onFile, onViewOriginal })
           class="icon-btn"
           type="button"
           title="Hold to compare with original"
+          aria-label="Hold to compare with original"
           @mousedown="onViewOriginal(true)"
           @mouseup="onViewOriginal(false)"
           @mouseleave="onViewOriginal(false)"
@@ -75,12 +76,12 @@ defineExpose({ onFile, onViewOriginal })
         >
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18" /><rect x="3" y="5" width="9" height="14" rx="1.5" /><rect x="12" y="5" width="9" height="14" rx="1.5" /></svg>
         </button>
-        <button class="icon-btn" type="button" title="Reset all edits" @click="confirmReset = true">
+        <button class="icon-btn" type="button" title="Reset all edits" aria-label="Reset all edits" @click="confirmReset = true">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></svg>
         </button>
         <div class="app-header__divider" />
       </template>
-      <button class="icon-btn" type="button" title="Toggle light / dark" @click="toggleTheme">
+      <button class="icon-btn" type="button" title="Toggle light / dark" aria-label="Toggle light / dark" @click="toggleTheme">
         <svg v-if="theme === 'dark'" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5" /><path d="M12 2v2.4M12 19.6V22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M2 12h2.4M19.6 12H22M4.9 19.1l1.7-1.7M17.4 6.6l1.7-1.7" /></svg>
         <svg v-else width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z" /></svg>
       </button>
