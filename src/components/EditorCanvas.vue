@@ -26,6 +26,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.editor-canvas { position: relative; min-height: 640px; width: 100%; }
-.tui-host { width: 100%; height: 640px; }
+.editor-canvas { position: relative; display: flex; align-items: center; justify-content: center; }
+.tui-host { width: 900px; max-width: 70vw; height: 560px; }
 </style>
