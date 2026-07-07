@@ -18,7 +18,9 @@ test suite with `npm test`.
 
 **Requirements (all implemented):**
 
-- Load an image via file upload (file picker; the canvas also accepts it).
+- Load an image via a dedicated upload screen (click-to-browse or drag-and-drop). Once
+  an image is loaded, the full editor (crop, adjust, filters, annotate, export) replaces
+  it — the two states keep the first-run experience uncluttered.
 - Crop (drag a region, Apply/Cancel).
 - Live sliders with real-time preview: **brightness, contrast, saturation**.
 - Reset / View original — a way back to the unedited image. Edits are non-destructive.
