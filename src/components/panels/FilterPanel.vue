@@ -17,7 +17,6 @@ defineExpose({ toggle })
 
 <template>
   <v-card flat>
-    <v-card-title class="text-subtitle-1">Filters</v-card-title>
     <v-card-text class="d-flex flex-wrap ga-2">
       <!--
         Do NOT bind :model-value on a standalone v-chip: a chip with

@@ -47,7 +47,6 @@ defineExpose({ startCrop, applyCrop, cancelCrop, flip, rotate })
 
 <template>
   <v-card flat>
-    <v-card-title class="text-subtitle-1">Transform</v-card-title>
     <v-card-text class="d-flex flex-wrap ga-2">
       <template v-if="!cropping">
         <v-btn size="small" prepend-icon="mdi-crop" :disabled="!store.hasImage" @click="startCrop">Crop</v-btn>

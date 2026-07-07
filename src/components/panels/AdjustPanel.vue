@@ -28,7 +28,6 @@ defineExpose({ onStart, onChange })
 
 <template>
   <v-card flat>
-    <v-card-title class="text-subtitle-1">Adjust</v-card-title>
     <v-card-text>
       <div v-for="c in channels" :key="c.name" class="mb-2">
         <v-slider

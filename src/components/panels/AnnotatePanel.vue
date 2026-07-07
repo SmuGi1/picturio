@@ -39,7 +39,6 @@ defineExpose({ addText, addShape, addIcon, toggleDraw, addMask })
 
 <template>
   <v-card flat>
-    <v-card-title class="text-subtitle-1">Annotate</v-card-title>
     <v-card-text class="d-flex flex-column ga-2">
       <div class="d-flex align-center ga-2">
         <v-text-field v-model="text" density="compact" hide-details label="Text" style="max-width: 160px" />
