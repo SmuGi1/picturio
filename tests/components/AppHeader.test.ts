@@ -2,29 +2,29 @@ import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { createVuetify } from 'vuetify'
-import Toolbar from '../../src/components/Toolbar.vue'
+import AppHeader from '../../src/components/AppHeader.vue'
 import { useEditorStore } from '../../src/stores/editor'
 import { MockAdapter } from '../editor/mockAdapter'
 
-function mountToolbar() {
+function mountHeader() {
   setActivePinia(createPinia())
   const store = useEditorStore()
   store.setAdapter(new MockAdapter())
-  const wrapper = mount(Toolbar, { global: { plugins: [createVuetify()] } })
+  const wrapper = mount(AppHeader, { global: { plugins: [createVuetify()] } })
   return { store, wrapper }
 }
 
-describe('Toolbar', () => {
+describe('AppHeader', () => {
   it('reads a file and loads it as the original', async () => {
-    const { store, wrapper } = mountToolbar()
+    const { store, wrapper } = mountHeader()
     const spy = vi.spyOn(store, 'loadOriginal')
     const file = new File(['x'], 'photo.png', { type: 'image/png' })
     await (wrapper.vm as unknown as { onFile: (f: File | File[] | null) => Promise<void> }).onFile(file)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining('data:'), 'photo.png')
   })
 
-  it('view-original toggle calls store.viewOriginal', async () => {
-    const { store, wrapper } = mountToolbar()
+  it('compare calls store.viewOriginal', async () => {
+    const { store, wrapper } = mountHeader()
     await store.loadOriginal('data:x', 'p.png')
     const spy = vi.spyOn(store, 'viewOriginal')
     await (wrapper.vm as unknown as { onViewOriginal: (v: boolean) => Promise<void> }).onViewOriginal(true)
