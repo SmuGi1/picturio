@@ -1,25 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useEditorStore } from '../stores/editor'
+import { loadImageFile } from '../editor/loadFile'
 
 const store = useEditorStore()
 const confirmReset = ref(false)
 
-function readAsDataURL(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(String(reader.result))
-    reader.onerror = () => reject(reader.error)
-    reader.readAsDataURL(file)
-  })
-}
-
 async function onFile(value: File | File[] | null) {
   const file = Array.isArray(value) ? value[0] : value
   if (!file) return
-  if (!file.type.startsWith('image/')) return
-  const dataURL = await readAsDataURL(file)
-  await store.loadOriginal(dataURL, file.name)
+  await loadImageFile(store, file)
 }
 
 async function onViewOriginal(on: boolean) {
