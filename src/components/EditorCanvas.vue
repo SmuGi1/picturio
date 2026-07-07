@@ -22,14 +22,10 @@ onBeforeUnmount(() => {
 <template>
   <div class="editor-canvas">
     <div ref="host" class="tui-host" />
-    <div v-if="!store.hasImage" class="placeholder text-medium-emphasis">
-      Upload an image to begin
-    </div>
   </div>
 </template>
 
 <style scoped>
 .editor-canvas { position: relative; min-height: 640px; width: 100%; }
 .tui-host { width: 100%; height: 640px; }
-.placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
 </style>
