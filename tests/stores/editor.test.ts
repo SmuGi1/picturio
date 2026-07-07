@@ -134,3 +134,15 @@ describe('editor store', () => {
     expect(last.method).toBe('loadImage')
   })
 })
+
+describe('hasEdits getter', () => {
+  beforeEach(() => setActivePinia(createPinia()))
+  it('is false with no ops and true once an op exists', async () => {
+    const store = useEditorStore()
+    store.setAdapter(new MockAdapter())
+    await store.loadOriginal('data:x', 'p.png')
+    expect(store.hasEdits).toBe(false)
+    await store.setAdjust('brightness', 0.3)
+    expect(store.hasEdits).toBe(true)
+  })
+})

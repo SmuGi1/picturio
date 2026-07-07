@@ -39,6 +39,7 @@ export const useEditorStore = defineStore('editor', {
     canUndo: (s) => s.undoStack.length > 0,
     canRedo: (s) => s.redoStack.length > 0,
     hasImage: (s) => s.originalImage !== null,
+    hasEdits: (s) => s.operations.length > 0,
   },
   actions: {
     setAdapter(adapter: ImageAdapter | null) {
