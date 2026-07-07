@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useEditorStore } from '../../stores/editor'
+import AppSlider from '../AppSlider.vue'
 import type { AdjustName } from '../../editor/operations'
 
 const store = useEditorStore()
-const channels: { name: AdjustName; label: string; icon: string }[] = [
-  { name: 'brightness', label: 'Brightness', icon: 'mdi-brightness-6' },
-  { name: 'contrast', label: 'Contrast', icon: 'mdi-contrast-circle' },
-  { name: 'saturation', label: 'Saturation', icon: 'mdi-palette' },
+const channels: { name: AdjustName; label: string }[] = [
+  { name: 'brightness', label: 'Brightness' },
+  { name: 'contrast', label: 'Contrast' },
+  { name: 'saturation', label: 'Saturation' },
 ]
 
 function valueOf(name: AdjustName): number {
@@ -27,21 +28,19 @@ defineExpose({ onStart, onChange })
 </script>
 
 <template>
-  <v-card flat>
-    <v-card-text>
-      <div v-for="c in channels" :key="c.name" class="mb-2">
-        <v-slider
-          :model-value="valueOf(c.name)"
-          :label="c.label"
-          :prepend-icon="c.icon"
-          :min="-1" :max="1" :step="0.01"
-          :disabled="disabled"
-          hide-details
-          thumb-label
-          @start="onStart"
-          @update:model-value="(v: number) => onChange(c.name, v)"
-        />
-      </div>
-    </v-card-text>
-  </v-card>
+  <div class="adjust-panel">
+    <AppSlider
+      v-for="c in channels"
+      :key="c.name"
+      :label="c.label"
+      :model-value="valueOf(c.name)"
+      :disabled="disabled"
+      @start="onStart"
+      @update:model-value="(v: number) => onChange(c.name, v)"
+    />
+  </div>
 </template>
+
+<style scoped>
+.adjust-panel :deep(.app-slider:last-child) { margin-bottom: 0; }
+</style>
