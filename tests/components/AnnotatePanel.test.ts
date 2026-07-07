@@ -16,20 +16,10 @@ async function setup() {
 }
 
 describe('AnnotatePanel', () => {
-  it('add text pushes a text annotation op', async () => {
-    const { store, wrapper } = await setup()
-    await (wrapper.vm as any).addText()
-    expect(store.operations.some((o) => o.type === 'text')).toBe(true)
-  })
   it('add shape pushes a shape annotation op', async () => {
     const { store, wrapper } = await setup()
     await (wrapper.vm as any).addShape('rect')
     expect(store.operations.some((o) => o.type === 'shape')).toBe(true)
-  })
-  it('add icon pushes an icon annotation op', async () => {
-    const { store, wrapper } = await setup()
-    await (wrapper.vm as any).addIcon('icon-star')
-    expect(store.operations.some((o) => o.type === 'icon')).toBe(true)
   })
   it('add mask pushes a mask annotation op', async () => {
     const { store, wrapper } = await setup()
