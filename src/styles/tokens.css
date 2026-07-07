@@ -1,0 +1,58 @@
+:root,
+[data-pt-theme='dark'] {
+  --pt-bg: #141312;
+  --pt-bg-canvas: #0d0c0b;
+  --pt-panel: #1c1b1a;
+  --pt-panel-alt: #242321;
+  --pt-border: rgba(255, 255, 255, 0.09);
+  --pt-border-strong: rgba(255, 255, 255, 0.18);
+  --pt-text: #f2f1ef;
+  --pt-text-dim: #a6a49f;
+  --pt-text-faint: #68665f;
+  --pt-accent: #5b8def;
+  --pt-accent-soft: rgba(91, 141, 239, 0.16);
+  --pt-logo-to: #8bb4ff;
+}
+
+[data-pt-theme='light'] {
+  --pt-bg: #f6f5f2;
+  --pt-bg-canvas: #e9e7e2;
+  --pt-panel: #ffffff;
+  --pt-panel-alt: #f1f0ec;
+  --pt-border: rgba(0, 0, 0, 0.09);
+  --pt-border-strong: rgba(0, 0, 0, 0.18);
+  --pt-text: #1c1b1a;
+  --pt-text-dim: #66645e;
+  --pt-text-faint: #a19e97;
+  --pt-accent: #3465c9;
+  --pt-accent-soft: rgba(52, 101, 201, 0.1);
+  --pt-logo-to: #7ea3ea;
+}
+
+/* Custom range slider (matches the better-ux mockup) */
+.pt-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+}
+.pt-slider::-webkit-slider-runnable-track { height: 4px; background: transparent; }
+.pt-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #fff; border: 2px solid var(--pt-accent); margin-top: -6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+.pt-slider::-moz-range-track { height: 4px; background: transparent; }
+.pt-slider::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #fff; border: 2px solid var(--pt-accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+.pt-slider:disabled { cursor: default; opacity: 0.5; }
