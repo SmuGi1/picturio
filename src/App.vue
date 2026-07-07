@@ -1,69 +1,59 @@
 <script setup lang="ts">
-import Toolbar from './components/Toolbar.vue'
-import EditorCanvas from './components/EditorCanvas.vue'
-import TransformPanel from './components/panels/TransformPanel.vue'
-import AdjustPanel from './components/panels/AdjustPanel.vue'
-import FilterPanel from './components/panels/FilterPanel.vue'
-import AnnotatePanel from './components/panels/AnnotatePanel.vue'
-import ExportMenu from './components/ExportMenu.vue'
+import { watch } from 'vue'
+import { useTheme as useVuetifyTheme } from 'vuetify'
+import AppHeader from './components/AppHeader.vue'
+import EditorStage from './components/EditorStage.vue'
+import SidePanel from './components/SidePanel.vue'
 import UploadScreen from './components/UploadScreen.vue'
 import { useEditorStore } from './stores/editor'
+import { useTheme } from './composables/useTheme'
 
 const store = useEditorStore()
+const { theme } = useTheme()
+const vuetifyTheme = useVuetifyTheme()
+
+watch(
+  theme,
+  (name) => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-pt-theme', name)
+    }
+    vuetifyTheme.global.name.value = name
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
   <v-app>
-    <v-app-bar color="surface" flat>
-      <v-app-bar-title>Picturio</v-app-bar-title>
-      <ExportMenu v-if="store.hasImage" />
-    </v-app-bar>
-    <v-main>
-      <div class="app-shell">
-        <div class="editor-layer" :inert="!store.hasImage">
-          <Toolbar />
-          <v-container fluid>
-            <v-row>
-              <v-col cols="12" md="8">
-                <EditorCanvas />
-              </v-col>
-              <v-col cols="12" md="4">
-                <v-expansion-panels multiple :model-value="[0, 1, 2, 3]">
-                  <v-expansion-panel>
-                    <v-expansion-panel-title>Transform</v-expansion-panel-title>
-                    <v-expansion-panel-text><TransformPanel /></v-expansion-panel-text>
-                  </v-expansion-panel>
-                  <v-expansion-panel>
-                    <v-expansion-panel-title>Adjust</v-expansion-panel-title>
-                    <v-expansion-panel-text><AdjustPanel /></v-expansion-panel-text>
-                  </v-expansion-panel>
-                  <v-expansion-panel>
-                    <v-expansion-panel-title>Filters</v-expansion-panel-title>
-                    <v-expansion-panel-text><FilterPanel /></v-expansion-panel-text>
-                  </v-expansion-panel>
-                  <v-expansion-panel>
-                    <v-expansion-panel-title>Annotate</v-expansion-panel-title>
-                    <v-expansion-panel-text><AnnotatePanel /></v-expansion-panel-text>
-                  </v-expansion-panel>
-                </v-expansion-panels>
-              </v-col>
-            </v-row>
-          </v-container>
-        </div>
-        <UploadScreen v-if="!store.hasImage" class="upload-overlay" />
+    <div class="app-shell">
+      <AppHeader />
+      <div class="app-body" :inert="!store.hasImage">
+        <EditorStage />
+        <SidePanel />
       </div>
-    </v-main>
+      <UploadScreen v-if="!store.hasImage" class="upload-overlay" />
+    </div>
   </v-app>
 </template>
 
 <style scoped>
 .app-shell {
   position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--pt-bg);
 }
+.app-body { flex: 1; display: flex; min-height: 0; }
 .upload-overlay {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 10;
-  background: rgb(var(--v-theme-background));
+  background: var(--pt-bg);
 }
 </style>
