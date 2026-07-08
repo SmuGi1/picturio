@@ -2,6 +2,7 @@ import 'tui-image-editor/dist/tui-image-editor.css'
 import ImageEditor from 'tui-image-editor'
 import type { ImageAdapter, ExportOptions, LoadResult } from './adapter.types'
 import type { CropRect } from './operations'
+import { CSS_MAX_WIDTH, CSS_MAX_HEIGHT, fitDimension } from './fitDimension'
 
 // tui's Filter._createFilter capitalizes only the FIRST letter of `type`, then
 // looks up fabric.Image.filters[Type]. Values here are the fabric class names.
@@ -15,16 +16,29 @@ const FILTER_TYPE: Record<string, string> = {
 
 export function createToastAdapter(el: HTMLElement): ImageAdapter {
   const editor = new ImageEditor(el, {
-    cssMaxWidth: 900,
-    cssMaxHeight: 640,
+    cssMaxWidth: CSS_MAX_WIDTH,
+    cssMaxHeight: CSS_MAX_HEIGHT,
     usageStatistics: false,
     selectionStyle: { cornerSize: 20, rotatingPointOffset: 70 },
   })
   const tuiType = (name: string) => FILTER_TYPE[name] ?? name
 
+  // tui's dark canvas container fills the host element and left/top-aligns the
+  // fitted image inside it, so a fixed-size host leaves dark bars around any
+  // non-matching aspect ratio. Shrink the host to the fitted image size after
+  // every dimension-changing op so the container hugs the image instead.
+  function syncHostSize() {
+    const { width, height } = editor.getCanvasSize()
+    if (!width || !height) return
+    const fit = fitDimension(width, height)
+    el.style.width = `${fit.width}px`
+    el.style.height = `${fit.height}px`
+  }
+
   return {
     async loadImage(dataURL: string, name: string): Promise<LoadResult> {
       const { newWidth, newHeight } = await editor.loadImageFromURL(dataURL, name)
+      syncHostSize()
       return { width: newWidth, height: newHeight }
     },
     // Our op-model options are dynamically shaped (Record<string, unknown>);
@@ -37,12 +51,13 @@ export function createToastAdapter(el: HTMLElement): ImageAdapter {
     async crop(rect: CropRect) {
       await editor.crop(rect)
       editor.stopDrawingMode()
+      syncHostSize()
     },
     startCrop() { editor.startDrawingMode('CROPPER') },
     cancelCrop() { editor.stopDrawingMode() },
     getCropRect(): CropRect { return editor.getCropzoneRect() },
     async flip(axis) { axis === 'x' ? await editor.flipX() : await editor.flipY() },
-    async rotate(degrees) { await editor.rotate(degrees) },
+    async rotate(degrees) { await editor.rotate(degrees); syncHostSize() },
     async addObject(type, props) {
       if (type === 'text') {
         const { id } = await editor.addText(String(props.text ?? 'Text'), props as Parameters<typeof editor.addText>[1])

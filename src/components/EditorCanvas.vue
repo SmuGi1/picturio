@@ -27,5 +27,8 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .editor-canvas { position: relative; display: flex; align-items: center; justify-content: center; }
-.tui-host { width: 900px; max-width: 70vw; height: 560px; }
+/* Initial box for the pre-load editor; the adapter resizes this to the fitted
+   image dimensions after each load/crop/rotate so the dark canvas container
+   hugs the image instead of leaving bars around non-matching aspect ratios. */
+.tui-host { width: 900px; height: 640px; }
 </style>
